@@ -13,9 +13,9 @@ songplay_table_create = ("""
         songplay_id INTEGER ,
         start_time TIMESTAMP NOT NULL,
         user_id INTEGER NOT NULL REFERENCES users (user_id),
-        level NUMERIC (15, 5),
-        song_id VARCHAR NOT NULL REFERENCES songs (song_id),
-        artist_id VARCHAR NOT NULL REFERENCES artists (artist_id),
+        level VARCHAR,
+        song_id VARCHAR REFERENCES songs (song_id),
+        artist_id VARCHAR REFERENCES artists (artist_id),
         session_id INTEGER NOT NULL,
         location VARCHAR,
         user_agent VARCHAR
@@ -159,6 +159,16 @@ time_table_insert = ("""
 # FIND SONGS
 
 song_select = ("""
+    SELECT 
+        songs.song_id AS song_id,
+        songs.artist_id AS artist_id
+    FROM
+        songs
+        JOIN artists ON (artists.artist_id = songs.artist_id)
+    WHERE
+        songs.title = %s AND 
+        artists.name = %s AND 
+        songs.duration = %s
 """)
 
 # QUERY LISTS
