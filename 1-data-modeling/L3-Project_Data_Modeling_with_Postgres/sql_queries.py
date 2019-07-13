@@ -78,7 +78,7 @@ songplay_table_insert = ("""
         location,
         user_agent 
     )
-    VALUES (%s)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
 """)
 
 user_table_insert = ("""
@@ -90,7 +90,13 @@ user_table_insert = ("""
         gender,
         level
     )
-    VALUES (%s)
+    VALUES (%s, %s, %s, %s, %s)
+    ON CONFLICT (user_id)
+    DO UPDATE
+        SET first_name = EXCLUDED.first_name,
+            last_name  = EXCLUDED.last_name,
+            gender     = EXCLUDED.gender,
+            level      = EXCLUDED.level
 """)
 
 song_table_insert = ("""
@@ -101,7 +107,13 @@ song_table_insert = ("""
         year,
         duration
     )
-    VALUES (%s)
+    VALUES (%s, %s, %s, %s, %s)
+    ON CONFLICT (song_id)
+    DO UPDATE
+        SET title     = EXCLUDED.title,
+            artist_id = EXCLUDED.artist_id,
+            year      = EXCLUDED.year,
+            duration  = EXCLUDED.duration
 """)
 
 artist_table_insert = ("""
@@ -112,7 +124,14 @@ artist_table_insert = ("""
         latitude,
         longitude
     )
-    VALUES (%s)
+    VALUES (%s, %s, %s, %s, %s)
+    ON CONFLICT (artist_id)
+    DO UPDATE
+        SET artist_id = EXCLUDED.artist_id,
+            name      = EXCLUDED.name,
+            location  = EXCLUDED.location,
+            latitude  = EXCLUDED.latitude,
+            longitude = EXCLUDED.longitude
 """)
 
 
@@ -126,7 +145,15 @@ time_table_insert = ("""
         year,
         weekday
     )
-    VALUES (%s)
+    VALUES (%s, %s, %s, %s, %s, %s, %s)
+    ON CONFLICT (start_time)
+    DO UPDATE
+        SET hour    = EXCLUDED.hour,
+            day     = EXCLUDED.day,
+            week    = EXCLUDED.week,
+            month   = EXCLUDED.month,
+            year    = EXCLUDED.year,
+            weekday = EXCLUDED.weekday
 """)
 
 # FIND SONGS
