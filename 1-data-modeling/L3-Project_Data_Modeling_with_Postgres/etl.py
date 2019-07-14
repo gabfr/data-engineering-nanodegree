@@ -20,7 +20,7 @@ def process_song_file(cur, filepath):
     artist_data = artist_data.drop_duplicates()
     artist_data = artist_data.replace(np.nan, None, regex=True)
 
-    insert_from_dataframe(cur, artist_table_insert, artist_data)
+    insert_from_dataframe(cur, artist_data, artist_table_insert)
 
     # insert song record
     song_data = df[['song_id','title', 'artist_id', 'year', 'duration']]
