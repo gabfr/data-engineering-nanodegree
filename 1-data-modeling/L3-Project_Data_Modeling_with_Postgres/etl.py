@@ -66,20 +66,20 @@ def process_log_file(cur, filepath):
 
     # insert songplay records
     for index, row in df.iterrows():
-
+        print((row.song, row.artist, row.length));
         # get songid and artistid from song and artist tables
-        #cur.execute(song_select, (row.title, row.artist_name, row.length))
-        #results = cur.fetchone()
+        cur.execute(song_select, (row.song, row.artist, row.length))
+        results = cur.fetchone()
 
-        #if results:
-        #    songid, artistid = results
-        #else:
-        #    songid, artistid = None, None
+        if results:
+           songid, artistid = results
+        else:
+           songid, artistid = None, None
 
         # insert songplay record
         songplay_data = (
             index, pd.to_datetime(row.ts, unit='ms'),
-            row.userId, row.level, row.song_id, row.artist_id,
+            row.userId, row.level, songid, artistid,
             row.sessionId, row.location, row.userAgent
         )
         cur.execute(songplay_table_insert, songplay_data)
