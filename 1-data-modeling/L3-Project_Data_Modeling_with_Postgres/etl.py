@@ -58,7 +58,7 @@ def process_log_file(cur, filepath):
     # load user table
     user_df = df[['userId', 'firstName', 'lastName', 'gender', 'level']]
     user_df = user_df.drop_duplicates()
-    user_df = user_df[user_df['userId'] != '']
+    user_df = user_df.replace(np.nan, None, regex=True)
     user_df.columns = ['user_id', 'first_name', 'last_name', 'gender', 'level']
 
     # insert user records
@@ -68,18 +68,18 @@ def process_log_file(cur, filepath):
     for index, row in df.iterrows():
 
         # get songid and artistid from song and artist tables
-        cur.execute(song_select, (row.song, row.artist, row.length))
-        results = cur.fetchone()
+        #cur.execute(song_select, (row.title, row.artist_name, row.length))
+        #results = cur.fetchone()
 
-        if results:
-            songid, artistid = results
-        else:
-            songid, artistid = None, None
+        #if results:
+        #    songid, artistid = results
+        #else:
+        #    songid, artistid = None, None
 
         # insert songplay record
         songplay_data = (
             index, pd.to_datetime(row.ts, unit='ms'),
-            row.userId, row.level, songid, artistid,
+            row.userId, row.level, row.song_id, row.artist_id,
             row.sessionId, row.location, row.userAgent
         )
         cur.execute(songplay_table_insert, songplay_data)

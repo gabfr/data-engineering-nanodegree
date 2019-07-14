@@ -164,12 +164,14 @@ song_select = ("""
         songs.artist_id AS artist_id
     FROM
         songs
-        JOIN artists ON (artists.artist_id = songs.artist_id)
     WHERE
         songs.title = %s AND 
-        artists.name = %s AND 
         songs.duration = %s
 """)
+
+#        JOIN artists ON (artists.artist_id = songs.artist_id)
+#...
+#        artists.name = %s AND 
 
 # QUERY LISTS
 
