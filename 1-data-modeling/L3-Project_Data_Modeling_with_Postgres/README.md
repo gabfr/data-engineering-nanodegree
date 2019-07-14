@@ -34,8 +34,8 @@ To learn how/why this schema design was made in this way, you should read our do
 - *Name:* `songplays`
 - *Type:* Fact table
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
+| Column | Type | Description |
+| ------ | ---- | ----------- |
 | `songplay_id` | `INTEGER` | The main identification of the table | 
 | `start_time` | `TIMESTAMP NOT NULL` | The timestamp that this song play log happened |
 | `user_id` | `INTEGER NOT NULL REFERENCES users (user_id)` | The user id that triggered this song play log. It cannot be null, as we don't have song play logs without being triggered by an user.  |
@@ -51,8 +51,8 @@ To learn how/why this schema design was made in this way, you should read our do
 - *Name:* `users`
 - *Type:* Dimension table
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
+| Column | Type | Description |
+| ------ | ---- | ----------- |
 | `user_id` | `INTEGER PRIMARY KEY` | The main identification of an user |
 | `first_name` | `VARCHAR NOT NULL` | First name of the user, can not be null. It is the basic information we have from the user |
 | `last_name` | `VARCHAR NOT NULL` | Last name of the user. |
@@ -65,8 +65,8 @@ To learn how/why this schema design was made in this way, you should read our do
 - *Name:* `songs`
 - *Type:* Dimension table
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
+| Column | Type | Description |
+| ------ | ---- | ----------- |
 | `song_id` | `VARCHAR PRIMARY KEY` | The main identification of a song | 
 | `title` | `VARCHAR NOT NULL` | The title of the song. It can not be null, as it is the basic information we have about a song. |
 | `artist_id` | `VARCHAR NOT NULL REFERENCES artists (artist_id)` | The artist id, it can not be null as we don't have songs without an artist, and this field also references the artists table. |
@@ -79,8 +79,8 @@ To learn how/why this schema design was made in this way, you should read our do
 - *Name:* `artists`
 - *Type:* Dimension table
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
+| Column | Type | Description |
+| ------ | ---- | ----------- |
 | `artist_id` | `VARCHAR PRIMARY KEY` | The main identification of an artist |
 | `name` | `VARCHAR NOT NULL` | The name of the artist |
 | `location` | `VARCHAR` | The location where the artist are from |
@@ -92,8 +92,8 @@ To learn how/why this schema design was made in this way, you should read our do
 - *Name:* `time`
 - *Type:* Dimension table
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
+| Column | Type | Description |
+| ------ | ---- | ----------- |
 | `start_time` | `TIMESTAMP NOT NULL PRIMARY KEY` | The timestamp itself, serves as the main identification of this table |
 | `hour` | `NUMERIC NOT NULL` | The hour from the timestamp  |
 | `day` | `NUMERIC NOT NULL` | The day of the month from the timestamp |
