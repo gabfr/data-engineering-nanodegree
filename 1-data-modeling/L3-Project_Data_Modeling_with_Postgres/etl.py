@@ -2,46 +2,67 @@ import os
 import glob
 import psycopg2
 import pandas as pd
+import numpy as np
 from sql_queries import *
+
+
+def insert_from_dataframe(cur, df, insert_query):
+    for i, row in df.iterrows():
+        cur.execute(insert_query, list(row))
 
 
 def process_song_file(cur, filepath):
     # open song file
-    df =
-
-    # insert song record
-    song_data =
-    cur.execute(song_table_insert, song_data)
+    df = pd.read_json(filepath, lines=True)
 
     # insert artist record
-    artist_data =
-    cur.execute(artist_table_insert, artist_data)
+    artist_data = df[['artist_id', 'artist_name', 'artist_location', 'artist_latitude', 'artist_longitude']]
+    artist_data = artist_data.drop_duplicates()
+    artist_data = artist_data.replace(np.nan, None, regex=True)
+
+    insert_from_dataframe(cur, artist_table_insert, artist_data)
+
+    # insert song record
+    song_data = df[['song_id','title', 'artist_id', 'year', 'duration']]
+    song_data = song_data.drop_duplicates()
+    song_data = song_data.replace(np.nan, None, regex=True)
+
+    insert_from_dataframe(cur, song_data, song_table_insert)
 
 
 def process_log_file(cur, filepath):
     # open log file
-    df =
+    df = pd.read_json(filepath, lines=True)
 
     # filter by NextSong action
-    df =
+    df = df[df['page'] == 'NextSong']
 
-    # convert timestamp column to datetime
-    t =
+    # Parsing the ts column as datetime into an Series object from panda, then creating the DataFrame
+    tf = pd.DataFrame({
+        'start_time': pd.to_datetime(df['ts'], unit='ms')
+    })
+
+    # Creating new columns
+    tf['hour'] = tf['start_time'].dt.hour
+    tf['day'] = tf['start_time'].dt.day
+    tf['week'] = tf['start_time'].dt.week
+    tf['month'] = tf['start_time'].dt.month
+    tf['year'] = tf['start_time'].dt.year
+    tf['weekday'] = tf['start_time'].dt.weekday
+
+    tf = tf.drop_duplicates()
 
     # insert time data records
-    time_data =
-    column_labels =
-    time_df =
-
-    for i, row in time_df.iterrows():
-        cur.execute(time_table_insert, list(row))
+    insert_from_dataframe(cur, tf, time_table_insert)
 
     # load user table
-    user_df =
+    user_df = df[['userId', 'firstName', 'lastName', 'gender', 'level']]
+    user_df = user_df.drop_duplicates()
+    user_df = user_df[user_df['userId'] != '']
+    user_df.columns = ['user_id', 'first_name', 'last_name', 'gender', 'level']
 
     # insert user records
-    for i, row in user_df.iterrows():
-        cur.execute(user_table_insert, row)
+    insert_from_dataframe(cur, user_df, user_table_insert)
 
     # insert songplay records
     for index, row in df.iterrows():
@@ -56,7 +77,11 @@ def process_log_file(cur, filepath):
             songid, artistid = None, None
 
         # insert songplay record
-        songplay_data =
+        songplay_data = (
+            index, pd.to_datetime(row.ts, unit='ms'),
+            row.userId, row.level, songid, artistid,
+            row.sessionId, row.location, row.userAgent
+        )
         cur.execute(songplay_table_insert, songplay_data)
 
 
