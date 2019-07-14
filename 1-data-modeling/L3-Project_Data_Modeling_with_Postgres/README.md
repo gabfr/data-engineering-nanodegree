@@ -101,3 +101,12 @@ To learn how/why this schema design was made in this way, you should read our do
 | `month` | `NUMERIC NOT NULL` | The month of the year from the timestamp |
 | `year` | `NUMERIC NOT NULL` | The year from the timestamp |
 | `weekday` | `NUMERIC NOT NULL` | The week day from the timestamp |
+
+## The project file structure
+
+We have a small list of files, easy to maintain and understand:
+ - `sql_queries.py` - Where it all begins, this files is meant to be a query repository to use throughout the ETL process
+ - `create_tables.py` - It's the file reponsible to create the schema structure into the PostgreSQL database
+ - `etl.py` - It's the file responsible for the main ETL process
+ - `etl.ipynb` - The python notebook that was written to develop the logic behind the `etl.py` process
+ - `test.ipynb` - And finally this notebook was used to certify if our ETL process was being successful (or not).
