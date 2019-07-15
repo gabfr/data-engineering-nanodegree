@@ -7,11 +7,24 @@ from sql_queries import *
 
 
 def insert_from_dataframe(cur, df, insert_query):
+    """
+    Insert a pandas dataframe with a given insert_query
+    :param cur: The cursor object
+    :param df: The pandas dataframe
+    :param insert_query: The insert query
+    :return: None
+    """
     for i, row in df.iterrows():
         cur.execute(insert_query, list(row))
 
 
 def process_song_file(cur, filepath):
+    """
+    Process songs log file
+    :param cur: the cursor object
+    :param filepath: log data file path
+    :return: None
+    """
     # open song file
     df = pd.read_json(filepath, lines=True)
 
@@ -31,6 +44,12 @@ def process_song_file(cur, filepath):
 
 
 def process_log_file(cur, filepath):
+    """
+    Process a songsplay log file
+    :param cur: The cursor object
+    :param filepath: The path to the log file
+    :return:None
+    """
     # open log file
     df = pd.read_json(filepath, lines=True)
 
@@ -86,6 +105,14 @@ def process_log_file(cur, filepath):
 
 
 def process_data(cur, conn, filepath, func):
+    """
+    Process all the data executing the given func for every *.json file of the given filepath
+    :param cur: The cursor data
+    :param conn: The connection with postgresql
+    :param filepath: The logs folder path
+    :param func: The function to process one log file per time
+    :return:None
+    """
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
@@ -105,6 +132,10 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
+    """
+    The main function
+    :return:None
+    """
     conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
 
