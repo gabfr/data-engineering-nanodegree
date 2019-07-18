@@ -12,3 +12,8 @@ Here you can take a look at all my exercise notebooks made throughout the nanode
 ### 1. Data Modeling Course
 
  - Project 1: [Data Modeling with Postgres: *Sparkify song play logs ETL process*](https://github.com/gabfr/data-engineering-nanodegree/tree/master/1-data-modeling/L3-Project_Data_Modeling_with_Postgres#sparkify-song-play-logs-etl-process)
+ - Project 2: [Data Modeling with Apache Cassandra: *Sparkify song play logs ETL process*](https://github.com/gabfr/data-engineering-nanodegree/blob/master/1-data-modeling/L5-Project_Data_Modeling_with_Apache_Cassandra/Project_1B_Project_Template.ipynb)
+ 
+ ### 2. Cloud Data Warehouses
+ 
+ 
