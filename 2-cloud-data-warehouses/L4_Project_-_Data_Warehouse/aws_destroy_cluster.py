@@ -1,4 +1,4 @@
-from create_cluster import config_parse_file, aws_client, check_cluster_creation, \
+from aws_create_cluster import config_parse_file, aws_client, check_cluster_creation, \
     config_persist_cluster_infos, destroy_redshift_cluster, get_redshift_cluster_status
 
 

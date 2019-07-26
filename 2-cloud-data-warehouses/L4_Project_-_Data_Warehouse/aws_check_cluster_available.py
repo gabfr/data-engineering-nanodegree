@@ -1,4 +1,4 @@
-from create_cluster import config_parse_file, aws_client, aws_open_redshift_port, check_cluster_creation, aws_resource, config_persist_cluster_infos
+from aws_create_cluster import config_parse_file, aws_client, aws_open_redshift_port, check_cluster_creation, aws_resource, config_persist_cluster_infos
 
 def main():
     config_parse_file()
