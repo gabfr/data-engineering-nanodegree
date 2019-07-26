@@ -24,23 +24,23 @@ time_table_drop = "DROP TABLE IF EXISTS time;"
 
 staging_events_table_create= ("""
     CREATE TABLE staging_events (
-        artist VARCHAR(255),
+        artist VARCHAR(500),
         auth VARCHAR(20),
-        firstName VARCHAR(255),
+        firstName VARCHAR(500),
         gender CHAR(1),
         itemInSession INTEGER,
-        lastName VARCHAR(255),
+        lastName VARCHAR(500),
         length DECIMAL(12, 5),
         level VARCHAR(10),
-        location VARCHAR(255),
+        location VARCHAR(500),
         method VARCHAR(20),
-        page VARCHAR(255),
+        page VARCHAR(500),
         registration TIMESTAMP,
         sessionId INTEGER,
-        song VARCHAR(255),
+        song VARCHAR(500),
         status INTEGER,
         ts TIMESTAMP,
-        userAgent VARCHAR(255),
+        userAgent VARCHAR(500),
         userId INTEGER
     );
 """)
@@ -51,10 +51,10 @@ staging_songs_table_create = ("""
         artist_id VARCHAR(20),
         artist_latitude DECIMAL(12, 5),
         artist_longitude DECIMAL(12, 5),
-        artist_location VARCHAR(255),
-        artist_name VARCHAR(255),
+        artist_location VARCHAR(500),
+        artist_name VARCHAR(500),
         song_id VARCHAR(20),
-        title VARCHAR(255),
+        title VARCHAR(500),
         duration DECIMAL(15, 5),
         year INTEGER
     );
@@ -69,16 +69,16 @@ songplay_table_create = ("""
         song_id VARCHAR(20) REFERENCES songs (song_id),
         artist_id VARCHAR(20) REFERENCES artists (artist_id),
         session_id INTEGER NOT NULL,
-        location VARCHAR(255),
-        user_agent VARCHAR(255)
+        location VARCHAR(500),
+        user_agent VARCHAR(500)
     )
 """)
 
 user_table_create = ("""
     CREATE TABLE IF NOT EXISTS users (
         user_id INTEGER PRIMARY KEY,
-        first_name VARCHAR(50) NOT NULL,
-        last_name VARCHAR(50) NOT NULL,
+        first_name VARCHAR(500) NOT NULL,
+        last_name VARCHAR(500) NOT NULL,
         gender CHAR(1),
         level VARCHAR(10) NOT NULL
     )
@@ -87,7 +87,7 @@ user_table_create = ("""
 song_table_create = ("""
     CREATE TABLE IF NOT EXISTS songs (
         song_id VARCHAR(20) PRIMARY KEY,
-        title VARCHAR(255) NOT NULL SORTKEY,
+        title VARCHAR(500) NOT NULL SORTKEY,
         artist_id VARCHAR NOT NULL DISTKEY REFERENCES artists (artist_id),
         year INTEGER NOT NULL,
         duration DECIMAL (15, 5) NOT NULL
@@ -97,8 +97,8 @@ song_table_create = ("""
 artist_table_create = ("""
     CREATE TABLE IF NOT EXISTS artists (
         artist_id VARCHAR(20) PRIMARY KEY,
-        name VARCHAR(100) NOT NULL SORTKEY,
-        location VARCHAR(255),
+        name VARCHAR(500) NOT NULL SORTKEY,
+        location VARCHAR(500),
         latitude DECIMAL(12,6),
         longitude DECIMAL(12,6)
     )
