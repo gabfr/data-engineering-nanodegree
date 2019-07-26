@@ -99,8 +99,8 @@ artist_table_create = ("""
         artist_id VARCHAR(20) PRIMARY KEY,
         name VARCHAR(100) NOT NULL SORTKEY,
         location VARCHAR(255),
-        latitude DECIMAL(10,5),
-        longitude DECIMAL(10,5)
+        latitude DECIMAL(9,6),
+        longitude DECIMAL(9,6)
     )
 """)
 
