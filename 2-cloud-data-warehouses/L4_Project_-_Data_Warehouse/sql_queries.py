@@ -121,9 +121,9 @@ time_table_create = ("""
 staging_events_copy = ("""
 
     copy staging_events 
-    from '{}'
+    from {}
     iam_role '{}'
-    json '{}'
+    json {}
 
 """).format(S3_LOG_DATA, DWH_IAM_ROLE_ARN, S3_LOG_JSONPATH)
 
@@ -132,7 +132,7 @@ print(staging_events_copy)
 staging_songs_copy = ("""
 
     copy staging_songs 
-    from '{}'
+    from {}
     iam_role '{}'
     json auto
 
