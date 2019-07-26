@@ -179,16 +179,17 @@ def main():
     clusterCreationStarted = start_cluster_creation(redshift, roleArn)
 
     if clusterCreationStarted:
-        while True:
-            print("Gonna check if the cluster was created...")
-            if check_cluster_creation(redshift):
-                config_persist_cluster_infos(redshift)
-                aws_open_redshift_port(ec2, redshift)
-                break
-            else:
-                print("Not yet. Waiting 30s before next check.")
-            time.sleep(30)
-        print("DONE!!")
+        print("The cluster is being created.")
+        # while True:
+        #     print("Gonna check if the cluster was created...")
+        #     if check_cluster_creation(redshift):
+        #         config_persist_cluster_infos(redshift)
+        #         aws_open_redshift_port(ec2, redshift)
+        #         break
+        #     else:
+        #         print("Not yet. Waiting 30s before next check.")
+        #     time.sleep(30)
+        # print("DONE!!")
 
         # wait until  becomes true?
 
