@@ -114,11 +114,13 @@ def config_persist_cluster_infos(redshift):
 
     config = configparser.ConfigParser()
 
-    with open('dwh.cfg', 'w+') as configfile:
+    with open('dwh.cfg') as configfile:
         config.read_file(configfile)
 
-        config.set("CLUSTER", "HOST", cluster_props['Endpoint']['Address'])
-        config.set("IAM_ROLE", "ARN", cluster_props['IamRoles'][0]['IamRoleArn'])
+    config.set("CLUSTER", "HOST", cluster_props['Endpoint']['Address'])
+    config.set("IAM_ROLE", "ARN", cluster_props['IamRoles'][0]['IamRoleArn'])
+
+    with open('dwh.cfg', 'w+') as configfile:
         config.write(configfile)
 
     config_parse_file()
