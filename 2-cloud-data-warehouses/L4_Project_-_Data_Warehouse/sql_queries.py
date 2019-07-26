@@ -35,7 +35,7 @@ staging_events_table_create= ("""
         location VARCHAR(255),
         method VARCHAR(20),
         page VARCHAR(255),
-        registration VARCHAR(255),
+        registration TIMESTAMP,
         sessionId INTEGER,
         song VARCHAR(255),
         status INTEGER,
@@ -124,8 +124,8 @@ staging_events_copy = ("""
     from {}
     region 'us-west-2'
     iam_role '{}'
-    json {}
-    timeformat 'epochmillisecs'
+    format as json {}
+    timeformat as 'epochmillisecs'
 
 """).format(S3_LOG_DATA, DWH_IAM_ROLE_ARN, S3_LOG_JSONPATH)
 
