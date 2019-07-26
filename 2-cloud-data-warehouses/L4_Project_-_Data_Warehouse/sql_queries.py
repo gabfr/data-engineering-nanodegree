@@ -49,8 +49,8 @@ staging_songs_table_create = ("""
     CREATE TABLE staging_songs (
         num_songs INTEGER,
         artist_id VARCHAR(20),
-        artist_latitude DECIMAL(5, 5),
-        artist_longitude DECIMAL(5, 5),
+        artist_latitude DECIMAL(12, 5),
+        artist_longitude DECIMAL(12, 5),
         artist_location VARCHAR(255),
         artist_name VARCHAR(255),
         song_id VARCHAR(20),
