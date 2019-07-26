@@ -137,7 +137,7 @@ staging_songs_copy = ("""
     from {}
     region 'us-west-2'
     iam_role '{}'
-    json auto
+    format as json 'auto'
 
 """).format(S3_SONG_DATA, DWH_IAM_ROLE_ARN)
 
