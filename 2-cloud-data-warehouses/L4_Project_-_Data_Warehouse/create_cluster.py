@@ -2,6 +2,7 @@ import configparser
 import pandas as pd
 import boto3
 import json
+import time
 
 KEY                    = None
 SECRET                 = None
@@ -178,9 +179,18 @@ def main():
     clusterCreationStarted = start_cluster_creation(redshift, roleArn)
 
     if clusterCreationStarted:
-        config_persist_cluster_infos(redshift)
-        aws_open_redshift_port(ec2, redshift)
-        # wait until check_cluster_creation(redshift) becomes true?
+        while True:
+            print("Gonna check if the cluster was created...")
+            if check_cluster_creation(redshift):
+                config_persist_cluster_infos(redshift)
+                aws_open_redshift_port(ec2, redshift)
+                break
+            else:
+                print("Not yet. Waiting 30s before next check.")
+            time.sleep(30)
+        print("DONE!!")
+
+        # wait until  becomes true?
 
 if __name__ == '__main__':
     main()
