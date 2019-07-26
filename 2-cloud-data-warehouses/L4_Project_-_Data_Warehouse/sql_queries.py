@@ -125,6 +125,7 @@ staging_events_copy = ("""
     region 'us-west-2'
     iam_role '{}'
     json {}
+    timeformat 'epochmillisecs'
 
 """).format(S3_LOG_DATA, DWH_IAM_ROLE_ARN, S3_LOG_JSONPATH)
 
