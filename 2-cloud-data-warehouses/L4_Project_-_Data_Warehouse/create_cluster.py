@@ -114,7 +114,7 @@ def config_persist_cluster_infos(redshift):
 
     config = configparser.ConfigParser()
 
-    with open('dwh.cfg') as configfile:
+    with open('dwh.cfg', 'w') as configfile:
         config.read_file(configfile)
 
         config.set("CLUSTER", "HOST", cluster_props['Endpoint']['Address'])
