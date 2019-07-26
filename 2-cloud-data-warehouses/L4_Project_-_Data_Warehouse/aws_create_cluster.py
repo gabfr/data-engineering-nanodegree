@@ -126,14 +126,22 @@ def config_persist_cluster_infos(redshift):
     config_parse_file()
 
 
-def check_cluster_creation(redshift):
+def get_redshift_cluster_status(redshift):
     global DWH_CLUSTER_IDENTIFIER
     cluster_props = redshift.describe_clusters(ClusterIdentifier=DWH_CLUSTER_IDENTIFIER)['Clusters'][0]
     cluster_status = cluster_props['ClusterStatus']
+    return cluster_status.lower()
 
-    if cluster_status.lower() == 'available':
+
+def check_cluster_creation(redshift):
+    if get_redshift_cluster_status(redshift) == 'available':
         return True
     return False
+
+
+def destroy_redshift_cluster(redshift):
+    global DWH_CLUSTER_IDENTIFIER
+    redshift.delete_cluster(ClusterIdentifier=DWH_CLUSTER_IDENTIFIER, SkipFinalClusterSnapshot=True)
 
 
 def aws_open_redshift_port(ec2, redshift):
