@@ -124,6 +124,7 @@ staging_events_copy = ("""
     from {}
     region 'us-west-2'
     iam_role '{}'
+    compupdate off 
     format as json {}
     timeformat as 'epochmillisecs'
 
@@ -137,6 +138,7 @@ staging_songs_copy = ("""
     from {}
     region 'us-west-2'
     iam_role '{}'
+    compupdate off 
     format as json 'auto'
 
 """).format(S3_SONG_DATA, DWH_IAM_ROLE_ARN)
