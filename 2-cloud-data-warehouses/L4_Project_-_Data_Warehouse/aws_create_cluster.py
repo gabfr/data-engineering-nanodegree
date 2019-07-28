@@ -177,10 +177,10 @@ def aws_client(service, region):
 def main():
     config_parse_file()
 
-    ec2 = aws_resource('ec2', 'us-east-2')
+    ec2 = aws_resource('ec2', 'us-west-2')
     # s3 = aws_resource('s3', 'us-west-2')
-    iam = aws_client('iam', "us-east-2")
-    redshift = aws_client('redshift', "us-east-2")
+    iam = aws_client('iam', "us-west-2")
+    redshift = aws_client('redshift', "us-west-2")
 
     create_iam_role(iam)
     attach_iam_role_policy(iam)

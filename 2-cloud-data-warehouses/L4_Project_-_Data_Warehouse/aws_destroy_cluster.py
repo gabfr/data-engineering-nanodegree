@@ -5,7 +5,7 @@ from aws_create_cluster import config_parse_file, aws_client, check_cluster_crea
 def main():
     config_parse_file()
 
-    redshift = aws_client('redshift', "us-east-2")
+    redshift = aws_client('redshift', "us-west-2")
 
     if check_cluster_creation(redshift):
         print('available')

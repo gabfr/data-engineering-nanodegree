@@ -122,7 +122,6 @@ staging_events_copy = ("""
 
     copy staging_events 
     from {}
-    region 'us-west-2'
     iam_role '{}'
     compupdate off 
     format as json {}
@@ -136,7 +135,6 @@ staging_songs_copy = ("""
 
     copy staging_songs 
     from {}
-    region 'us-west-2'
     iam_role '{}'
     compupdate off 
     format as json 'auto'
