@@ -172,7 +172,7 @@ user_table_insert = ("""
     FROM
         staging_events
     GROUP BY
-        userId
+        userId, firstName, lastName, gender
 """)
 
 song_table_insert = ("""
@@ -185,7 +185,7 @@ song_table_insert = ("""
         duration
     FROM
         staging_songs
-    GROUP BY song_id;
+    GROUP BY song_id, title, artist_id, year, duration;
 """)
 
 artist_table_insert = ("""
@@ -198,7 +198,7 @@ artist_table_insert = ("""
         artist_longitude AS longitude
     FROM
         staging_songs
-    GROUP BY artist_id;
+    GROUP BY artist_id, artist_name, artist_location, artist_latitude, artist_longitude;
 """)
 
 time_table_insert = ("""
