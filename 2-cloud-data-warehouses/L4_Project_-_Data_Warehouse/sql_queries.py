@@ -149,7 +149,7 @@ print(staging_songs_copy)
 songplay_table_insert = ("""
     INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
     SELECT
-        (TO_CHAR(ts :: DATE, 'yyyyMMDDHH24')::integer) AS start_time,
+        (TO_CHAR((TIMESTAMP 'epoch' + ts/1000 *INTERVAL '1 second') :: DATE, 'yyyyMMDDHH24')::integer) AS start_time,
         userId as user_id,
         level,
         (SELECT song_id FROM songs WHERE title = staging_events.song AND artist_id = (SELECT artist_id FROM artists WHERE name = staging_events.artist)) AS song_id,
@@ -204,7 +204,7 @@ artist_table_insert = ("""
 time_table_insert = ("""
     INSERT INTO time (start_time, hour, day, week, month, year, weekday)
     SELECT
-        DISTINCT(TO_CHAR(ts :: DATE, 'yyyyMMDDHH24')::integer) AS start_time,
+        DISTINCT(TO_CHAR((TIMESTAMP 'epoch' + ts/1000 *INTERVAL '1 second') :: DATE, 'yyyyMMDDHH24')::integer) AS start_time,
         EXTRACT(hour FROM ts)                              AS hour,
         EXTRACT(day FROM ts)                              AS day,
         EXTRACT(week FROM ts)                              AS week,
