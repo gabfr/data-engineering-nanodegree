@@ -35,11 +35,11 @@ staging_events_table_create= ("""
         location VARCHAR(500),
         method VARCHAR(20),
         page VARCHAR(500),
-        registration TIMESTAMP,
+        registration FLOAT,
         sessionId INTEGER,
         song VARCHAR(500),
         status INTEGER,
-        ts TIMESTAMP,
+        ts BIGINT,
         userAgent VARCHAR(500),
         userId INTEGER
     );
@@ -122,6 +122,7 @@ staging_events_copy = ("""
 
     copy staging_events 
     from {}
+    region 'us-west-2'
     iam_role '{}'
     compupdate off 
     format as json {}
@@ -135,6 +136,7 @@ staging_songs_copy = ("""
 
     copy staging_songs 
     from {}
+    region 'us-west-2'
     iam_role '{}'
     compupdate off 
     format as json 'auto'
