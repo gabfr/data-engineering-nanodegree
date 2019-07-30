@@ -130,8 +130,6 @@ staging_events_copy = ("""
 
 """).format(S3_LOG_DATA, DWH_IAM_ROLE_ARN, S3_LOG_JSONPATH)
 
-print(staging_events_copy)
-
 staging_songs_copy = ("""
 
     copy staging_songs 
@@ -143,7 +141,6 @@ staging_songs_copy = ("""
 
 """).format(S3_SONG_DATA, DWH_IAM_ROLE_ARN)
 
-print(staging_songs_copy)
 # FINAL TABLES
 
 songplay_table_insert = ("""
@@ -233,6 +230,21 @@ time_table_insert = ("""
     WHERE 
         start_time NOT IN (SELECT DISTINCT start_time FROM time)
 """)
+
+analytical_queries = [
+    'SELECT COUNT(*) AS total FROM artists',
+    'SELECT COUNT(*) AS total FROM songs',
+    'SELECT COUNT(*) AS total FROM time',
+    'SELECT COUNT(*) AS total FROM users',
+    'SELECT COUNT(*) AS total FROM songplays'
+]
+analytical_query_titles = [
+    'Artists table count',
+    'Songs table count',
+    'Time table count',
+    'Users table count',
+    'Song plays table count'
+]
 
 # QUERY LISTS
 
