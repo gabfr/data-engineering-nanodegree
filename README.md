@@ -16,4 +16,5 @@ Here you can take a look at all my exercise notebooks made throughout the nanode
  
  ### 2. Cloud Data Warehouses
  
+ - Project 3: [Data Warehouse with AWS Redshift: *Sparkify - ETL process of song play events*](https://github.com/gabfr/data-engineering-nanodegree/tree/master/2-cloud-data-warehouses/L4_Project_-_Data_Warehouse)
  
