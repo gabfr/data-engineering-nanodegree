@@ -39,7 +39,7 @@ staging_events_table_create= ("""
         sessionId INTEGER,
         song VARCHAR(500),
         status INTEGER,
-        ts BIGINT,
+        ts VARCHAR(50),
         userAgent VARCHAR(500),
         userId INTEGER
     );
@@ -63,7 +63,7 @@ staging_songs_table_create = ("""
 songplay_table_create = ("""
     CREATE TABLE IF NOT EXISTS songplays (
         songplay_id INTEGER IDENTITY(0,1) SORTKEY,
-        start_time BIGINT NOT NULL,
+        start_time TIMESTAMP NOT NULL,
         user_id INTEGER NOT NULL REFERENCES users (user_id),
         level VARCHAR(10),
         song_id VARCHAR(20) REFERENCES songs (song_id),
@@ -106,7 +106,7 @@ artist_table_create = ("""
 
 time_table_create = ("""
     CREATE TABLE IF NOT EXISTS time (
-        start_time BIGINT NOT NULL PRIMARY KEY SORTKEY,
+        start_time TIMESTAMP NOT NULL PRIMARY KEY SORTKEY,
         hour NUMERIC NOT NULL,
         day NUMERIC NOT NULL,
         week NUMERIC NOT NULL,
@@ -148,22 +148,34 @@ print(staging_songs_copy)
 
 songplay_table_insert = ("""
     INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
-    SELECT
-        (TO_CHAR((TIMESTAMP 'epoch' + ts/1000 *INTERVAL '1 second'), 'yyyyMMDDHH24')::integer) AS start_time,
-        userId as user_id,
-        level,
-        (SELECT song_id FROM songs WHERE title = staging_events.song AND artist_id = (SELECT artist_id FROM artists WHERE name = staging_events.artist)) AS song_id,
-        (SELECT artist_id FROM artists WHERE name = staging_events.artist) AS artist_id,
-        sessionId AS session_id,
-        location,
-        userAgent AS user_agent
+    SELECT DISTINCT
+        TIMESTAMP 'epoch' + ts/1000 * INTERVAL '1 second' AS start_time,
+        e.userId as user_id,
+        e.level,
+        s.song_id AS song_id,
+        s.artist_id AS artist_id,
+        e.sessionId AS session_id,
+        e.location AS location,
+        e.userAgent AS user_agent
     FROM
-        staging_events
+        staging_events e, staging_songs s
+    WHERE 
+        e.page = 'NextSong' AND 
+        e.song = s.title AND 
+        e.userId NOT IN (
+            SELECT DISTINCT 
+                s2.user_id 
+            FROM 
+                songplays s2 
+            WHERE 
+                s2.user_id = e.userId AND  
+                s2.session_id = e.sessionId
+        ) 
 """)
 
 user_table_insert = ("""
     INSERT INTO users (user_id, first_name, last_name, gender, level)
-    SELECT
+    SELECT DISTINCT
         userId AS user_id,
         firstName AS first_name,
         lastName AS last_name,
@@ -171,13 +183,14 @@ user_table_insert = ("""
         level
     FROM
         staging_events
-    GROUP BY
-        userId, firstName, lastName, gender
+    WHERE
+        page = 'NextSong' AND
+        user_id NOT IN (SELECT DISTINCT user_id FROM users)
 """)
 
 song_table_insert = ("""
     INSERT INTO songs (song_id, title, artist_id, year, duration)
-    SELECT         
+    SELECT DISTINCT
         song_id,
         title,
         artist_id,
@@ -185,12 +198,13 @@ song_table_insert = ("""
         duration
     FROM
         staging_songs
-    GROUP BY song_id, title, artist_id, year, duration;
+    WHERE 
+        song_id NOT IN (SELECT DISTINCT song_id FROM songs)
 """)
 
 artist_table_insert = ("""
     INSERT INTO artists (artist_id, name, location, latitude, longitude)
-    SELECT         
+    SELECT DISTINCT
         artist_id,
         artist_name AS name,
         artist_location AS location,
@@ -198,21 +212,26 @@ artist_table_insert = ("""
         artist_longitude AS longitude
     FROM
         staging_songs
-    GROUP BY artist_id, artist_name, artist_location, artist_latitude, artist_longitude;
+    WHERE 
+        artist_id NOT IN (SELECT DISTINCT artist_id FROM artists)
 """)
 
 time_table_insert = ("""
     INSERT INTO time (start_time, hour, day, week, month, year, weekday)
     SELECT
-        DISTINCT(TO_CHAR((TIMESTAMP 'epoch' + ts/1000 *INTERVAL '1 second'), 'yyyyMMDDHH24')::integer) AS start_time,
-        EXTRACT(hour FROM ts)                              AS hour,
-        EXTRACT(day FROM ts)                              AS day,
-        EXTRACT(week FROM ts)                              AS week,
-        EXTRACT(month FROM ts)                              AS month,
-        EXTRACT(year FROM ts)                              AS year,
-        (CASE WHEN EXTRACT(ISODOW FROM ts) IN (6, 7) THEN false ELSE true END) AS weekday
-    FROM
-        staging_events
+        ts AS start_time,
+        EXTRACT(hr      FROM ts) AS hour,
+        EXTRACT(d       FROM ts) AS day,
+        EXTRACT(w       FROM ts) AS week,
+        EXTRACT(mon     FROM ts) AS month,
+        EXTRACT(yr      FROM ts) AS year, 
+        EXTRACT(weekday FROM ts) AS weekday
+    FROM (
+    	SELECT DISTINCT  TIMESTAMP 'epoch' + ts/1000 *INTERVAL '1 second' as ts 
+        FROM staging_events s     
+    )
+    WHERE 
+        start_time NOT IN (SELECT DISTINCT start_time FROM time)
 """)
 
 # QUERY LISTS
