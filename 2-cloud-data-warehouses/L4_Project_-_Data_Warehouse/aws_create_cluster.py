@@ -21,6 +21,10 @@ DWH_IAM_ROLE_NAME      = None
 
 
 def config_parse_file():
+    """
+    Parse the dwh.cfg configuration file
+    :return:
+    """
     global KEY, SECRET, DWH_CLUSTER_TYPE, DWH_NUM_NODES, \
         DWH_NODE_TYPE, DWH_CLUSTER_IDENTIFIER, DWH_DB, \
         DWH_DB_USER, DWH_DB_PASSWORD, DWH_PORT, DWH_IAM_ROLE_NAME
@@ -47,6 +51,11 @@ def config_parse_file():
 
 
 def create_iam_role(iam):
+    """
+    Create the AWS IAM role
+    :param iam:
+    :return:
+    """
     global DWH_IAM_ROLE_NAME
     dwhRole = None
     try:
@@ -68,17 +77,33 @@ def create_iam_role(iam):
 
 
 def attach_iam_role_policy(iam):
+    """
+    Attach the AmazonS3ReadOnlyAccess role policy to the created IAM
+    :param iam:
+    :return:
+    """
     global DWH_IAM_ROLE_NAME
     print('1.2 Attaching Policy')
     return iam.attach_role_policy(RoleName=DWH_IAM_ROLE_NAME, PolicyArn="arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess")['ResponseMetadata']['HTTPStatusCode'] == 200
 
 
 def get_iam_role_arn(iam):
+    """
+    Get the IAM role ARN string
+    :param iam: The IAM resource client
+    :return:string
+    """
     global DWH_IAM_ROLE_NAME
     return iam.get_role(RoleName=DWH_IAM_ROLE_NAME)['Role']['Arn']
 
 
 def start_cluster_creation(redshift, roleArn):
+    """
+    Start the Redshift cluster creation
+    :param redshift: The redshift resource client
+    :param roleArn: The created role ARN
+    :return:
+    """
     global DWH_CLUSTER_TYPE, DWH_NODE_TYPE, DWH_NUM_NODES, \
         DWH_DB, DWH_CLUSTER_IDENTIFIER, DWH_DB_USER, DWH_DB_PASSWORD
     print("2. Starting redshift cluster creation")
@@ -107,6 +132,11 @@ def start_cluster_creation(redshift, roleArn):
 
 
 def config_persist_cluster_infos(redshift):
+    """
+    Write back to the dwh.cfg configuration file the cluster endpoint and IAM ARN
+    :param redshift: The redshift resource client
+    :return:
+    """
     global DWH_CLUSTER_IDENTIFIER
     print("Writing the cluster address and IamRoleArn to the config file...")
 
@@ -127,6 +157,11 @@ def config_persist_cluster_infos(redshift):
 
 
 def get_redshift_cluster_status(redshift):
+    """
+    Retrieves the Redshift cluster status
+    :param redshift: The Redshift resource client
+    :return: The cluster status
+    """
     global DWH_CLUSTER_IDENTIFIER
     cluster_props = redshift.describe_clusters(ClusterIdentifier=DWH_CLUSTER_IDENTIFIER)['Clusters'][0]
     cluster_status = cluster_props['ClusterStatus']
@@ -134,17 +169,33 @@ def get_redshift_cluster_status(redshift):
 
 
 def check_cluster_creation(redshift):
+    """
+    Check if the cluster status is available, if it is returns True. Otherwise, false.
+    :param redshift: The Redshift client resource
+    :return:bool
+    """
     if get_redshift_cluster_status(redshift) == 'available':
         return True
     return False
 
 
 def destroy_redshift_cluster(redshift):
+    """
+    Destroy the Redshift cluster (request deletion)
+    :param redshift: The Redshift client resource
+    :return:None
+    """
     global DWH_CLUSTER_IDENTIFIER
     redshift.delete_cluster(ClusterIdentifier=DWH_CLUSTER_IDENTIFIER, SkipFinalClusterSnapshot=True)
 
 
 def aws_open_redshift_port(ec2, redshift):
+    """
+    Opens the Redshift port on the VPC security group.
+    :param ec2: The EC2 client resource
+    :param redshift: The Redshift client resource
+    :return:None
+    """
     global DWH_CLUSTER_IDENTIFIER, DWH_PORT
     cluster_props = redshift.describe_clusters(ClusterIdentifier=DWH_CLUSTER_IDENTIFIER)['Clusters'][0]
     try:
@@ -166,18 +217,30 @@ def aws_open_redshift_port(ec2, redshift):
 
 
 def aws_resource(name, region):
+    """
+    Creates an AWS client resource
+    :param name: The name of the resource
+    :param region: The region of the resource
+    :return:
+    """
     global KEY, SECRET
     return boto3.resource(name, region_name=region, aws_access_key_id=KEY, aws_secret_access_key=SECRET)
 
 
 def aws_client(service, region):
+    """
+    Creates an AWS client
+    :param service: The service
+    :param region: The region of the service
+    :return:
+    """
     global KEY, SECRET
     return boto3.client(service, aws_access_key_id=KEY, aws_secret_access_key=SECRET, region_name=region)
 
 def main():
     config_parse_file()
 
-    ec2 = aws_resource('ec2', 'us-east-2')
+    # ec2 = aws_resource('ec2', 'us-east-2')
     # s3 = aws_resource('s3', 'us-west-2')
     iam = aws_client('iam', "us-east-2")
     redshift = aws_client('redshift', "us-east-2")

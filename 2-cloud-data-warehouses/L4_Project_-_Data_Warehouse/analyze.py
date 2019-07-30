@@ -4,6 +4,11 @@ from sql_queries import analytical_queries, analytical_query_titles
 
 
 def run_analytical_queries(cur):
+    """
+    Runs all analytical queries written in the sql_queries script
+    :param cur:
+    :return:
+    """
     idx = 0
     for query in analytical_queries:
         print("{}... ".format(analytical_query_titles[idx]))
