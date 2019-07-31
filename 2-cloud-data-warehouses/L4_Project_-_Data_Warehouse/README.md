@@ -55,7 +55,7 @@ It consists of these two simple python scripts:
  - `python create_tables.py` - It will drop the tables if exists, and then create it (again);
  - `python etl.py` - This script does two principal tasks:
      - Copy (load) the logs from the dataset's S3 bucket to the staging tables;
-     - Translate all data from the staging tables to the analytical tables with `INSERT ... SELECt` statements.
+     - Translate all data from the staging tables to the analytical tables with `INSERT ... SELECT` statements.
 
 ## Analyzing the results
 
