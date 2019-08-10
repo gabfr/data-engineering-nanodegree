@@ -1,5 +1,12 @@
 # Sparkify's Data Lake ELT process
 
+## Summary
+
+ - [Introduction](#introduction)
+ - [Getting started](#getting-started)
+ - [Data sources](#data-sources)
+ - [Parquet data schema](#parquet-data-schema)
+ 
 ## Introduction
 
 This project aims to create analytical _parquet_ tables on Amazon S3 using AWS ElasticMapReduce/Spark to extract, 
