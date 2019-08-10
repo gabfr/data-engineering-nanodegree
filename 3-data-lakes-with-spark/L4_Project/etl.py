@@ -16,6 +16,10 @@ os.environ['AWS_SECRET_ACCESS_KEY']=config['AWS_SECRET_ACCESS_KEY']
 
 
 def create_spark_session():
+    """
+    Creates the Spark Session
+    :return:
+    """
     spark = SparkSession \
         .builder \
         .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:2.7.0") \
@@ -24,6 +28,13 @@ def create_spark_session():
 
 
 def process_song_data(spark, input_data, output_data):
+    """
+    Process all the songs data from the json files specified from the input_data
+    :param spark:
+    :param input_data:
+    :param output_data:
+    :return:
+    """
     # get filepath to song data file
     song_data = input_data + "song_data/*/*/*"
     
@@ -57,6 +68,13 @@ def process_song_data(spark, input_data, output_data):
 
 
 def process_log_data(spark, input_data, output_data):
+    """
+    Process all event logs of the Sparkify app usage, specifically the 'NextSong' event.
+    :param spark:
+    :param input_data:
+    :param output_data:
+    :return:
+    """
     # get filepath to log data file
     log_data = input_data + "log_data/*/*"
 
