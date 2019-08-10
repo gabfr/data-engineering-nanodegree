@@ -74,14 +74,13 @@ def process_log_data(spark, input_data, output_data):
             col('lastName').alias('last_name'),
             col('gender').alias('gender'),
             col('level').alias('level')
-        ).groupBy('userId')
+        ).distinct()
     )
     
     # write users table to parquet files
     users_table.write.parquet(output_data + "users.parquet", mode="overwrite")
 
     # create timestamp column from original timestamp column
-    # get_timestamp = udf()
     df = df.withColumn(
         "ts_timestamp",
         F.to_timestamp(F.from_unixtime((col("ts") / 1000) , 'yyyy-MM-dd HH:mm:ss.SSS')).cast("Timestamp")
