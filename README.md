@@ -18,3 +18,6 @@ Here you can take a look at all my exercise notebooks made throughout the nanode
  
  - Project 3: [Data Warehouse with AWS Redshift: *Sparkify - ETL process of song play events*](https://github.com/gabfr/data-engineering-nanodegree/tree/master/2-cloud-data-warehouses/L4_Project_-_Data_Warehouse)
  
+ ### 3. Data Lakes with Spark
+ 
+ - Project 4: [Sparkify's Data Lake ELT process](https://github.com/gabfr/data-engineering-nanodegree/tree/master/3-data-lakes-with-spark/L4_Project)
