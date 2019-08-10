@@ -61,28 +61,7 @@ def process_log_data(spark, input_data, output_data):
     log_data = input_data + "log_data/*/*"
 
     # read log data file
-    df = (
-        spark.read.schema(T.StructType([
-            T.StructField("artist", T.StringType(), True),
-            T.StructField("auth", T.StringType(), True),
-            T.StructField("firstName", T.StringType(), True),
-            T.StructField("gender", T.StringType(), True),
-            T.StructField("itemInSession", T.IntegerType(), True),
-            T.StructField("lastName", T.StringType(), True),
-            T.StructField("length", T.DoubleType(), True),
-            T.StructField("level", T.StringType(), True),
-            T.StructField("location", T.StringType(), True),
-            T.StructField("method", T.StringType(), True),
-            T.StructField("page", T.StringType(), True),
-            T.StructField("registration", T.DoubleType(), True),
-            T.StructField("sessionId", T.IntegerType(), True),
-            T.StructField("song", T.StringType(), True),
-            T.StructField("status", T.IntegerType(), True),
-            T.StructField("ts", T.LongType(), True),
-            T.StructField("userAgent", T.StringType(), True),
-            T.StructField("userId", T.StringType(), True),
-        ])).json(log_data)
-    )
+    df = spark.read.json(log_data)
 
     # filter by actions for song plays
     df = df.where(df.page == 'NextSong')
@@ -107,18 +86,11 @@ def process_log_data(spark, input_data, output_data):
         "ts_timestamp",
         F.to_timestamp(F.from_unixtime((col("ts") / 1000) , 'yyyy-MM-dd HH:mm:ss.SSS')).cast("Timestamp")
     )
-    
-    # create datetime column from original timestamp column
-    # get_datetime = udf()
-    df = df.withColumn(
-        "ts_datetime",
-        F.to_timestamp(F.from_unixtime((col("ts") / 1000), 'yyyy-MM-dd HH:mm:ss.SSS')).cast("DateTime")
-    )
 
     def get_weekday(date):
         import datetime
         import calendar
-        date = date.split(' ')[0]
+        date = date.strftime("%m-%d-%Y")  # , %H:%M:%S
         month, day, year = (int(x) for x in date.split('-'))
         weekday = datetime.date(year, month, day)
         return calendar.day_name[weekday.weekday()]
@@ -128,7 +100,7 @@ def process_log_data(spark, input_data, output_data):
     # extract columns to create time table
     time_table = (
         df.withColumn("hour", hour(col("ts_timestamp")))
-          .withColumn("day", day(col("ts_timestamp")))
+          .withColumn("day", dayofmonth(col("ts_timestamp")))
           .withColumn("week", weekofyear(col("ts_timestamp")))
           .withColumn("month", month(col("ts_timestamp")))
           .withColumn("year", year(col("ts_timestamp")))
@@ -148,19 +120,33 @@ def process_log_data(spark, input_data, output_data):
     time_table.write.parquet(output_data + "time.parquet", mode="overwrite")
 
     # read in song data to use for songplays table
-    song_df = 
+    song_df = spark.read.parquet(output_data + "song.parquet")
 
-    # extract columns from joined song and log datasets to create songplays table 
-    songplays_table = 
+    # extract columns from joined song and log datasets to create songplays table
+    songplays_table = (
+        df.withColumn("songplay_id", F.monotonically_increasing_id())
+          .join(song_df, song_df.title == df.song)
+          .select(
+            "songplay_id",
+            col("ts_timestamp").alias("start_time"),
+            col("userId").alias("user_id"),
+            "level",
+            "song_id",
+            "artist_id",
+            col("sessionId").alias("session_id"),
+            "location",
+            col("userAgent").alias("user_agent")
+          )
+    )
 
     # write songplays table to parquet files partitioned by year and month
-    songplays_table
+    songplays_table.write.parquet(output_data + "songplays.parquet", mode="overwrite")
 
 
 def main():
     spark = create_spark_session()
     input_data = "s3a://udacity-dend/"
-    output_data = ""
+    output_data = "s3a://social-wiki-datalake/"
     
     process_song_data(spark, input_data, output_data)    
     process_log_data(spark, input_data, output_data)
