@@ -119,7 +119,7 @@ def process_log_data(spark, input_data, output_data):
     time_table.write.parquet(output_data + "time.parquet", mode="overwrite")
 
     # read in song data to use for songplays table
-    song_df = spark.read.parquet(output_data + "song.parquet")
+    song_df = spark.read.parquet(output_data + "songs.parquet")
 
     # extract columns from joined song and log datasets to create songplays table
     songplays_table = (
