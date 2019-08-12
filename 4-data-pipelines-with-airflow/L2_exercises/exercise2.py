@@ -45,11 +45,11 @@ dag = DAG(
     'lesson2.exercise2',
     start_date=datetime.datetime(2018, 1, 1, 0, 0, 0, 0),
     # TODO: Set the end date to February first
-    #end_date=<REPLACE>,
+    end_date=datetime.datetime(2018, 2, 1, 0, 0, 0, 0),
     # TODO: Set the schedule to be monthly
-    #schedule_interval='<REPLACE>',
+    schedule_interval='@monthly',
     # TODO: set the number of max active runs to 1
-    #max_active_runs=<REPLACE>
+    max_active_runs=1
 )
 
 create_trips_table = PostgresOperator(
