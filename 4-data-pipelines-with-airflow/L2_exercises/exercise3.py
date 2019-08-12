@@ -20,7 +20,7 @@ def load_trip_data_to_redshift(*args, **kwargs):
     redshift_hook = PostgresHook("redshift")
 
     # # #
-    execution_date = kwargs["ds"]
+    execution_date = datetime.datetime.strptime(kwargs["ds"], '%y-%m-%d')
     # # #
 
     sql_stmt = sql_statements.COPY_MONTHLY_TRIPS_SQL.format(
