@@ -29,7 +29,6 @@ class LoadFactOperator(BaseOperator):
     def execute(self, context):
         redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id)
 
-        self.log.info("Clearing data from destination Redshift table")
         redshift.run(LoadFactOperator.insert_into_stmt.format(
             table=self.table,
             select_query=self.select_query
