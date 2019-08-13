@@ -62,8 +62,5 @@ location_traffic_task = PostgresOperator(
     sql=sql_statements.LOCATION_TRAFFIC_SQL
 )
 
-#
-# TODO: Reorder the Graph once you have moved the checks
-#
 trips_subdag_task >> location_traffic_task
 stations_subdag_task >> location_traffic_task
