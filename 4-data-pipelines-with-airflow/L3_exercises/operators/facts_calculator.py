@@ -37,16 +37,11 @@ class FactsCalculatorOperator(BaseOperator):
     def execute(self, context):
         redshift_hook = PostgresHook(self.redshift_conn_id)
 
-        redshift_hook.run(f"""
-            DROP TABLE IF EXISTS {self.destination_table};
-            CREATE TABLE {self.destination_table} AS
-            SELECT
-                {self.groupby_column},
-                MAX({self.fact_column}) AS max_{self.fact_column},
-                MIN({self.fact_column}) AS min_{self.fact_column},
-                AVG({self.fact_column}) AS average_{self.fact_column}
-            FROM {self.origin_table}
-            GROUP BY {self.groupby_column};
-        """)
+        redshift_hook.run(self.facts_sql_template.format(
+            destination_table=self.destination_table,
+            groupby_column=self.groupby_column,
+            fact_column=self.fact_column,
+            origin_table=self.origin_table
+        ))
 
         pass
