@@ -14,7 +14,7 @@ default_args = {
     'start_date': datetime(2019, 1, 12),
 }
 
-dag = DAG('udac_example_dag',
+dag = DAG('sparkify_analytical_tables_dag',
           default_args=default_args,
           description='Load and transform data in Redshift with Airflow',
           schedule_interval='0 * * * *'
