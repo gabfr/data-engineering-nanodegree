@@ -21,3 +21,7 @@ Here you can take a look at all my exercise notebooks made throughout the nanode
  ### 3. Data Lakes with Spark
  
  - Project 4: [Sparkify's Data Lake ELT process](https://github.com/gabfr/data-engineering-nanodegree/tree/master/3-data-lakes-with-spark/L4_Project)
+ 
+ ### 4. Data Pipelines with Airflow
+ 
+  - Project 5: [Sparkify's Data Lake ELT process](https://github.com/gabfr/data-engineering-nanodegree/tree/master/4-data-pipelines-with-airflow/L4_project)
