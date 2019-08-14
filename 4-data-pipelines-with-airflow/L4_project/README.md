@@ -91,10 +91,10 @@ Besides the staging tables, we have 1 fact table and 4 dimensions table detailed
 
 | Column | Type | Description |
 | ------ | ---- | ----------- |
-| `start_time` | `TIMESTAMP` | The timestamp itself, serves as the main identification of this table |
-| `hour` | `INTEGER` | The hour from the timestamp  |
-| `day` | `INTEGER` | The day of the month from the timestamp |
-| `week` | `INTEGER` | The week of the year from the timestamp |
-| `month` | `INTEGER` | The month of the year from the timestamp |
-| `year` | `INTEGER` | The year from the timestamp |
-| `weekday` | `STRING` | The week day from the timestamp (Monday to Friday) |
+| `start_time` | `timestamp NOT NULL` | The timestamp itself, serves as the main identification of this table |
+| `hour` | `int4` | The hour from the timestamp  |
+| `day` | `int4` | The day of the month from the timestamp |
+| `week` | `int4` | The week of the year from the timestamp |
+| `month` | `varchar(255)` | The month of the year from the timestamp |
+| `year` | `int4` | The year from the timestamp |
+| `weekday` | `varchar(255)` | The week day from the timestamp (Monday to Friday) |
