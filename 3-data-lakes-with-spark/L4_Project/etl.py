@@ -18,7 +18,7 @@ os.environ['AWS_SECRET_ACCESS_KEY']=config['AWS_SECRET_ACCESS_KEY']
 def create_spark_session():
     """
     Creates the Spark Session
-    :return:
+    :return spark:
     """
     spark = SparkSession \
         .builder \
@@ -161,6 +161,11 @@ def process_log_data(spark, input_data, output_data):
 
 
 def main():
+    """
+    Runs the previous functions to process the data and define their parameters.
+    :param:
+    :return:
+    """
     spark = create_spark_session()
     input_data = "s3a://udacity-dend/"
     output_data = "s3a://social-wiki-datalake/"
